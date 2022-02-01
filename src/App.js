@@ -8,6 +8,8 @@ import Countries from './Countries';
 import SearchCountry from './SearchCountry';
 
 function App() {
+const [conditionalStatement, setConditionalStatement] = useState('')
+const [resultLength, setResultLength] = useState(0)
 const [newName, setNewName] = useState('')
 const [countries, setCountries] = useState([])
 const [disabledState, setDisabledState] = useState(false)
@@ -16,16 +18,22 @@ const [number, setNumber] = useState(0)
 const [persons, setPersons] = useState([])
 const [searchCountryValue, setSearchCountryValue] = useState('')
 
-const filterCountries = (e) =>{
-  setSearchCountryValue(e.target.value)
-}
+
 
 const showingCountries = searchCountryValue === ''
 ? []
 : countries.filter((country)=>(country.name.official.toLowerCase().includes(searchCountryValue.toLocaleLowerCase())))
 
 
+const conditionalHeader = searchCountryValue === ""
+? "too many matches, specify another filter"
+: ""
 
+const filterCountries = (e) =>{
+  setSearchCountryValue(e.target.value)
+  console.log(showingCountries.length)
+  setResultLength(showingCountries.length)
+}
 
 
 useEffect(() => {
@@ -33,7 +41,6 @@ useEffect(() => {
   axios
     .get('http://localhost:3004/persons')
     .then(response => {
-      console.log('promise fulfilled', response.data)
       setPersons(response.data)
     })
 }, [])
@@ -44,20 +51,21 @@ useEffect(() => {
   axios
     .get('https://restcountries.com/v3.1/all')
     .then(response => {
-      console.log('promise fulfilled', response.data)
 
       setCountries(response.data)
 
     })
 }, [])
 
-console.log(countries)
+
+
+
+const languages = countries.map(country=>country.languages)
 
 
 
   
   const setQuery = (e) =>{
-console.log(e.target.value)
 setNewName(e.target.value)
 
 setDisabledState(false)
@@ -73,6 +81,8 @@ const setSearch = (e) => {
   console.log(e.target.value)
   setNumber(e.target.value)
  }
+
+
 
 
  const showingContacts = searchValue === ''
@@ -132,7 +142,7 @@ persons.map(function (person){
 
   <Contacts contacts={showingContacts} />
   <SearchCountry value={searchCountryValue} filterCountries={filterCountries}/>
-  <Countries countries={showingCountries} />
+  <Countries countries={showingCountries} conditionalStatement={conditionalHeader} resultLength={resultLength}/>
   
     </div>
   );
