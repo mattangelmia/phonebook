@@ -9,6 +9,7 @@ import SearchCountry from './SearchCountry';
 
 function App() {
 const [conditionalStatement, setConditionalStatement] = useState('')
+const [showButtonClicked, setShowButtonClicked] = useState(false)
 const [resultLength, setResultLength] = useState(0)
 const [newName, setNewName] = useState('')
 const [countries, setCountries] = useState([])
@@ -18,7 +19,13 @@ const [number, setNumber] = useState(0)
 const [persons, setPersons] = useState([])
 const [searchCountryValue, setSearchCountryValue] = useState('')
 
-
+const showCountry = (country)=>{
+console.log(country.name.official)
+let clickedCountry = countries.filter((c)=>c.name.official===country.name.official)
+console.log(clickedCountry)
+setCountries(clickedCountry)
+setShowButtonClicked(true)
+}
 
 const showingCountries = searchCountryValue === ''
 ? []
@@ -33,6 +40,8 @@ const filterCountries = (e) =>{
   setSearchCountryValue(e.target.value)
   console.log(showingCountries.length)
   setResultLength(showingCountries.length)
+  setShowButtonClicked(false)
+  
 }
 
 
@@ -55,7 +64,7 @@ useEffect(() => {
       setCountries(response.data)
 
     })
-}, [])
+}, [searchCountryValue])
 
 
 
@@ -142,7 +151,7 @@ persons.map(function (person){
 
   <Contacts contacts={showingContacts} />
   <SearchCountry value={searchCountryValue} filterCountries={filterCountries}/>
-  <Countries countries={showingCountries} conditionalStatement={conditionalHeader} resultLength={resultLength}/>
+  <Countries showCountry={showCountry} showButtonClicked={showButtonClicked} countries={showingCountries} conditionalStatement={conditionalHeader} resultLength={resultLength}/>
   
     </div>
   );

@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function Countries(props) {
 
-if(props.resultLength === 1){
+if(props.showButtonClicked === true){
 
     return (
         <div style={{marginTop: '5vh'}}>
@@ -34,6 +34,7 @@ if(props.resultLength === 1){
                      
                      <div style={{listStyleType: 'none', marginBottom: '8vh'}} key={country.name.official}>  
                      <h3>{country.name.official}</h3>
+                     <button onClick={()=>props.showCountry(country)}>Show</button>
                      </div>
                    
                      )}
