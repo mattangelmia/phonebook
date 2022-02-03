@@ -2,10 +2,14 @@ import React from 'react';
 
 export default function Countries(props) {
 
-if(props.showButtonClicked === true){
+if(props.countries.length === 1 ){
+    
 
     return (
-        <div style={{marginTop: '5vh'}}>
+
+
+
+        <div style={{marginTop: '2vh'}}>
          <h5>{props.conditionalStatement}</h5>
             
              {props.countries.map(country=>
@@ -16,13 +20,19 @@ if(props.showButtonClicked === true){
              <p>Capital {country.capital}</p>
              <p>Population {country.population}</p>
             <img src={country.flags.png}/>
+            <h4>Weather in {country.capital[0]}</h4>
+            <p>Temperature: {props.weatherData} celcius</p>
+            <p>{props.weatherDescription}</p>
              </div>
            
              )}
+
+            
              
          </div>)
 
 }
+
 
 
     return (

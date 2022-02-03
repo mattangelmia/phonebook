@@ -9,6 +9,12 @@ import SearchCountry from './SearchCountry';
 
 function App() {
 const [conditionalStatement, setConditionalStatement] = useState('')
+const [countriesAmount, setCountriesAmount] = useState(0)
+const [weatherTemp, setWeatherTemp] = useState(0)
+const [weatherInfo, setWeatherInfo] = useState([])
+const [weatherDescription, setWeatherDescription] = useState('')
+const [singleCountry, setSingleCountry] = useState('')
+const [capitalCity, setCapitalCity] = useState('washhington')
 const [showButtonClicked, setShowButtonClicked] = useState(false)
 const [resultLength, setResultLength] = useState(0)
 const [newName, setNewName] = useState('')
@@ -22,14 +28,50 @@ const [searchCountryValue, setSearchCountryValue] = useState('')
 const showCountry = (country)=>{
 console.log(country.name.official)
 let clickedCountry = countries.filter((c)=>c.name.official===country.name.official)
-console.log(clickedCountry)
+console.log(clickedCountry[0].latlng[0],clickedCountry[0].latlng[1])
 setCountries(clickedCountry)
+console.log(clickedCountry)
+
 setShowButtonClicked(true)
+const newWeatherInfo = ([...weatherInfo])
+setWeatherInfo({
+  latitude: clickedCountry[0].latlng[0], 
+  longitude: clickedCountry[0].latlng[1],
+  temperature: clickedCountry[0]
+
+})
+
 }
 
 const showingCountries = searchCountryValue === ''
 ? []
 : countries.filter((country)=>(country.name.official.toLowerCase().includes(searchCountryValue.toLocaleLowerCase())))
+
+
+useEffect(() => {
+  const params = {
+    access_key: 'e114490646d358a24c834e7e0b246d83',
+    query: capitalCity
+  }
+
+  axios.get('http://api.weatherstack.com/current', {params})
+    .then(response => {
+      const apiResponse = response.data;
+      console.log(apiResponse.current.temperature)
+      console.log(apiResponse)
+      // setWeatherTemp(apiResponse.current.temperature)
+      // setWeatherDescription(apiResponse.current.weather_descriptions[0])
+    }).catch(error => {
+      console.log(error);
+  })
+},[singleCountry])
+
+// e114490646d358a24c834e7e0b246d83
+
+
+
+
+
 
 
 const conditionalHeader = searchCountryValue === ""
@@ -38,15 +80,38 @@ const conditionalHeader = searchCountryValue === ""
 
 const filterCountries = (e) =>{
   setSearchCountryValue(e.target.value)
-  console.log(showingCountries.length)
   setResultLength(showingCountries.length)
   setShowButtonClicked(false)
+  setWeatherInfo([])
+
+  if(showingCountries.length === 1){
+    setCountriesAmount(1)
+    setSingleCountry(searchCountryValue)
+    setCapitalCity(showingCountries[0].capital[0])
+    console.log(showingCountries[0].capital[0])
+  }
+
+  else{
+    console.log('too many countries')
+  }
   
 }
 
 
+
+
+
+
+// useEffect(() => {
+//   axios
+//     .get(`http://api.openweathermap.org/data/2.5/weather?lat=${weatherInfo.latitude}&lon=${weatherInfo.longitude}&appid=ec96eb69ca0cc00e6fb542d20ed260f4`)
+//     .then(response => {
+//       console.log(response.data)
+//       setWeatherData([response.data])
+//     })
+
+// }, [])
 useEffect(() => {
-  console.log('effect')
   axios
     .get('http://localhost:3004/persons')
     .then(response => {
@@ -54,9 +119,7 @@ useEffect(() => {
     })
 }, [])
 
-
 useEffect(() => {
-  console.log('effect')
   axios
     .get('https://restcountries.com/v3.1/all')
     .then(response => {
@@ -66,14 +129,8 @@ useEffect(() => {
     })
 }, [searchCountryValue])
 
-
-
-
 const languages = countries.map(country=>country.languages)
 
-
-
-  
   const setQuery = (e) =>{
 setNewName(e.target.value)
 
@@ -85,25 +142,16 @@ const setSearch = (e) => {
 
 }
 
-
  const  numberChange = (e) => {
   console.log(e.target.value)
   setNumber(e.target.value)
  }
-
-
-
 
  const showingContacts = searchValue === ''
  ? persons
  : persons.filter((c)=>(
      c.name.toLowerCase().includes(searchValue.toLowerCase())
  ))
-
-
- 
-  
-
   const addContact = (e) =>{
       console.log('hello')
       e.preventDefault()
@@ -129,19 +177,8 @@ persons.map(function (person){
     setPersons(persons.concat(newContact))
    
   }
-})
-
-
-
-
-
-
-
-
-
-   
+}) 
   }
-
 
   return (
   
@@ -151,7 +188,7 @@ persons.map(function (person){
 
   <Contacts contacts={showingContacts} />
   <SearchCountry value={searchCountryValue} filterCountries={filterCountries}/>
-  <Countries showCountry={showCountry} showButtonClicked={showButtonClicked} countries={showingCountries} conditionalStatement={conditionalHeader} resultLength={resultLength}/>
+  <Countries weatherDescription={weatherDescription}  weatherData={weatherTemp}  showCountry={showCountry} showButtonClicked={showButtonClicked} countries={showingCountries} conditionalStatement={conditionalHeader} resultLength={resultLength}/>
   
     </div>
   );
