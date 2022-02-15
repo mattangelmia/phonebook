@@ -168,10 +168,18 @@ function App() {
 
   const removeContact = (person) => {
     console.log("deleted");
-    console.log(person);
+    console.log(person.id);
     console.log(persons);
     let filtered = persons.filter((c) => c !== person);
-    setPersons(filtered);
+
+    axios
+      .delete(`http://localhost:3004/persons/${person.id}`)
+      .then((response) => {
+        setPersons(filtered);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   return (
