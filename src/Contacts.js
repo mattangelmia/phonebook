@@ -1,6 +1,8 @@
 import React from "react";
 
 function Contacts(props) {
+  const label = props.label ? "make not important" : "make important";
+
   return (
     <div>
       <h1>Numbers</h1>
@@ -20,6 +22,9 @@ function Contacts(props) {
               Name: {person.name}, Number: {person.number}{" "}
             </li>
             <button onClick={() => props.removeContact(person)}>x</button>
+            <button onClick={() => props.toggleImportance(person)}>
+              {person.important ? "make not important" : "make important"}
+            </button>
           </div>
         ))}
       </ul>

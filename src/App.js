@@ -11,6 +11,9 @@ import SearchCountry from "./SearchCountry";
 function App() {
   const [conditionalStatement, setConditionalStatement] = useState("");
   const [countriesAmount, setCountriesAmount] = useState(0);
+
+  const [showImportance, setShowImportance] = useState("true");
+
   const [weatherTemp, setWeatherTemp] = useState(0);
   const [weatherInfo, setWeatherInfo] = useState([]);
   const [weatherDescription, setWeatherDescription] = useState("");
@@ -24,6 +27,8 @@ function App() {
   const [searchValue, setSearchValue] = useState("");
   const [number, setNumber] = useState(0);
   const [persons, setPersons] = useState([]);
+  const [toggledState, setToggledState] = useState([]);
+
   const [searchCountryValue, setSearchCountryValue] = useState("");
 
   const showCountry = (country) => {
@@ -144,11 +149,14 @@ function App() {
     const newContact = {
       name: newName,
       number: number,
+      important: true,
     };
 
     setNewName("");
     setNumber("");
     console.log(searchValue);
+
+    let duplicate = persons.find((person) => person.name === newName);
 
     persons.map((person) => {
       if (person.name === newName) {
@@ -182,6 +190,17 @@ function App() {
       });
   };
 
+  function toggleImportance(person) {
+    console.log(`importance of ${person.id} needs to be toggled`);
+    let toggledPerson = { ...person, important: !person.important };
+    console.log(toggledPerson);
+    let filteredPersons = persons.filter(
+      (person) => person.name !== toggledPerson.name
+    );
+    console.log(filteredPersons.concat(toggledPerson));
+    setPersons(filteredPersons.concat(toggledPerson));
+  }
+
   return (
     <div className="App">
       <Form
@@ -194,7 +213,11 @@ function App() {
         handleNumberChange={numberChange}
         searchValue={searchValue}
       />
-      <Contacts contacts={showingContacts} removeContact={removeContact} />
+      <Contacts
+        contacts={showingContacts}
+        removeContact={removeContact}
+        toggleImportance={toggleImportance}
+      />
       <SearchCountry
         value={searchCountryValue}
         filterCountries={filterCountries}

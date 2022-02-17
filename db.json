@@ -1,14 +1,22 @@
 {
   "persons": [
     {
-      "name": "Arto Hellas",
-      "number": "040-123456",
+      "name": "matt",
+      "number": 0,
+      "important": "true",
       "id": 1
     },
     {
-      "name": "matt ",
-      "number": "305-773-9645",
+      "name": "dave",
+      "number": 0,
+      "important": true,
       "id": 2
+    },
+    {
+      "name": "jimmy",
+      "number": "",
+      "important": true,
+      "id": 3
     }
   ]
 }
