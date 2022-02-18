@@ -125,7 +125,6 @@ function App() {
 
   const setQuery = (e) => {
     setNewName(e.target.value);
-
     setDisabledState(false);
   };
 
@@ -198,7 +197,15 @@ function App() {
       (person) => person.name !== toggledPerson.name
     );
     console.log(filteredPersons.concat(toggledPerson));
-    setPersons(filteredPersons.concat(toggledPerson));
+
+    axios
+      .put(`http://localhost:3004/persons/${person.id}`, toggledPerson)
+      .then((response) => {
+        setPersons(filteredPersons.concat(toggledPerson));
+      })
+      .catch(function (error) {
+        console.log(error.response.data);
+      });
   }
 
   return (
